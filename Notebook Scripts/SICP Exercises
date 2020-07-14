@@ -1,0 +1,483 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    ";;; Multiple representations for Abstract Data "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "#'user/make-from-mag-ang"
+      ]
+     },
+     "execution_count": 10,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    ";;; Rectangular form representation of complex number. \n",
+    "\n",
+    "(defn real-part [z]\n",
+    "    (first z))\n",
+    "\n",
+    "\n",
+    "(defn imag-part [z] \n",
+    "    (second z))\n",
+    "\n",
+    "\n",
+    "(defn magnitude [z]\n",
+    "  (Math/sqrt (+ (Math/pow (real-part z) 2) (Math/pow (imag-part z) 2))))\n",
+    "\n",
+    "\n",
+    "(defn angle [z]\n",
+    "  (Math/atan2 (imag-part z) (real-part z)))\n",
+    "\n",
+    "\n",
+    "(defn make-from-real-imag [x y] \n",
+    "    (cons x y))\n",
+    "\n",
+    "\n",
+    "(defn make-from-mag-ang [r a]\n",
+    "  (cons (* r (Math/cos a)) (* r (Math/sin a))))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "#'user/make-from-mag-ang"
+      ]
+     },
+     "execution_count": 12,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    ";;; Polar form representation of complex number. \n",
+    "\n",
+    "(defn real-part [z]\n",
+    "  (* (magnitude z) (Math/cos (angle z))))\n",
+    "\n",
+    "\n",
+    "(defn imag-part [z]\n",
+    "  (* (magnitude z) (Math/sin (angle z))))\n",
+    "\n",
+    "\n",
+    "(defn magnitude [z]\n",
+    "  (first z))\n",
+    "\n",
+    "\n",
+    "(defn angle [z]\n",
+    "  (second z))\n",
+    "\n",
+    "\n",
+    "(defn make-from-real-imag [x y]\n",
+    "  (cons (Math/sqrt (+ (Math/pow x 2) (Math/pow y 2)))\n",
+    "        (Math/atan2 y x)))\n",
+    "\n",
+    "\n",
+    "(defn make-from-mag-ang [r a] \n",
+    "    (cons r a))\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "#'user/div-complex"
+      ]
+     },
+     "execution_count": 13,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    ";;; Add, Subtract, Multiply and Divide operation of complex number.\n",
+    "\n",
+    "(defn add-complex [z1 z2]\n",
+    "  (make-from-real-imag (+ (real-part z1) (real-part z2))\n",
+    "                       (+ (imag-part z1) (imag-part z2))))\n",
+    "                       \n",
+    "(defn sub-complex [z1 z2]\n",
+    "  (make-from-real-imag (- (real-part z1) (real-part z2))\n",
+    "                       (- (imag-part z1) (imag-part z2))))\n",
+    "\n",
+    "(defn mul-complex [z1 z2]\n",
+    "  (make-from-mag-ang (* (magnitude z1) (magnitude z2))\n",
+    "                     (+ (angle z1) (angle z2))))\n",
+    "\n",
+    "(defn div-complex [z1 z2]\n",
+    "  (make-from-mag-ang (/ (magnitude z1) (magnitude z2))\n",
+    "                     (- (angle z1) (angle z2))))\n",
+    "                       "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "#'user/attach-tag"
+      ]
+     },
+     "execution_count": 14,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    ";; Attaching a tag approach\n",
+    "(defn attach-tag [type-tag contents]\n",
+    "  (cons type-tag contents))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "#'user/contents"
+      ]
+     },
+     "execution_count": 16,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    ";; Getting the tag\n",
+    "\n",
+    "(defn tag [datum]\n",
+    "    (if (= (count datum) 2)\n",
+    "      (first datum)\n",
+    "      (prn \"Bad tagged datum\")))\n",
+    "\n",
+    "\n",
+    ";; Getting the contents\n",
+    "\n",
+    "(defn contents [datum]\n",
+    "    (if (= (count datum) 2)\n",
+    "      (second datum)\n",
+    "      (prn \"Bad content datum\" )))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "#'user/polar?"
+      ]
+     },
+     "execution_count": 18,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "(defn rectangular? [z]\n",
+    "  (= (tag z) 'rectangular))\n",
+    "\n",
+    "(defn polar? [z]\n",
+    "  (= (tag z) 'polar))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "#'user/make-from-mag-ang-polar"
+      ]
+     },
+     "execution_count": 20,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    ";;; Changing the name of rectangular and polar functions by adding suffix rectangular and polar respectively. \n",
+    "\n",
+    ";;; Rectangular form representation of complex number. \n",
+    "\n",
+    "(defn real-part-rectangular [z]\n",
+    "    (first z))\n",
+    "\n",
+    "\n",
+    "(defn imag-part-rectangular [z] \n",
+    "    (second z))\n",
+    "\n",
+    "\n",
+    "(defn magnitude-rectangular [z]\n",
+    "  (Math/sqrt (+ (Math/pow (real-part z) 2) (Math/pow (imag-part z) 2))))\n",
+    "\n",
+    "\n",
+    "(defn angle-rectangular [z]\n",
+    "  (Math/atan2 (imag-part z) (real-part z)))\n",
+    "\n",
+    "\n",
+    "\n",
+    ";;; Polar form representation of complex number. \n",
+    "\n",
+    "(defn real-part-polar [z]\n",
+    "  (* (magnitude z) (Math/cos (angle z))))\n",
+    "\n",
+    "\n",
+    "(defn imag-part-polar [z]\n",
+    "  (* (magnitude z) (Math/sin (angle z))))\n",
+    "\n",
+    "\n",
+    "(defn magnitude-polar [z]\n",
+    "  (first z))\n",
+    "\n",
+    "\n",
+    "(defn angle-polar [z]\n",
+    "  (second z))\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "#'user/make-from-mag-ang-polar"
+      ]
+     },
+     "execution_count": 23,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "(defn make-from-real-imag-rectangular [x y] \n",
+    "    (attach-tag 'rectangular (cons x y)))\n",
+    "\n",
+    "\n",
+    "(defn make-from-mag-ang-rectangular [r a]\n",
+    "  (attach-tag 'rectangular (cons (* r (Math/cos a)) (* r (Math/sin a)))))\n",
+    "\n",
+    "\n",
+    "(defn make-from-real-imag-polar [x y]\n",
+    "  (attach-tag 'polar (cons (Math/sqrt (+ (Math/pow x 2) (Math/pow y 2)))\n",
+    "        (Math/atan2 y x))))\n",
+    "\n",
+    "\n",
+    "(defn make-from-mag-ang-polar [r a] \n",
+    "    (attach-tag 'polar (cons r a)))\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "#'user/angle"
+      ]
+     },
+     "execution_count": 22,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "(defn real-part [z]\n",
+    "  (cond (rectangular? z)\n",
+    "         (real-part-rectangular (contents z))\n",
+    "        (polar? z)\n",
+    "         (real-part-polar (contents z))\n",
+    "        :else (prn \"Unsupported Type\")))\n",
+    "\n",
+    "\n",
+    "(defn imag-part [z]\n",
+    "  (cond (rectangular? z)\n",
+    "         (imag-part-rectangular (contents z))\n",
+    "        (polar? z)\n",
+    "         (imag-part-polar (contents z))\n",
+    "        :else (prn \"Unsupported Type\")))\n",
+    "\n",
+    "(defn magnitude [z]\n",
+    "  (cond (rectangular? z)\n",
+    "         (magnitude-rectangular (contents z))\n",
+    "        (polar? z)\n",
+    "         (magnitude-polar (contents z))\n",
+    "        :else (prn \"Unsupported Type\")))\n",
+    "\n",
+    "(defn angle [z]\n",
+    "  (cond (rectangular? z)\n",
+    "         (angle-rectangular (contents z))\n",
+    "        (polar? z)\n",
+    "         (angle-polar (contents z))\n",
+    "        :else (prn \"Unsupported Type\")))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    ";;; Symbolic Data "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "#'user/memq"
+      ]
+     },
+     "execution_count": 24,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "(defn memq [item x]\n",
+    "  (cond (empty? x) false\n",
+    "        (= item (first x)) x\n",
+    "        :else (memq item (rest x))))\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "(a b c)\n",
+      "((george))\n",
+      "((y1 y2))\n",
+      "false\n",
+      "false\n",
+      "(red shoes blue socks)\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "nil"
+      ]
+     },
+     "execution_count": 26,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "(list 'a 'b 'c)\n",
+    "(prn (list 'a 'b 'c))\n",
+    ";-> (a b c)\n",
+    "\n",
+    "(list (list 'george))\n",
+    "(prn (list (list 'george)))\n",
+    ";-> ((george))\n",
+    "\n",
+    "(rest '((x1 x2) (y1 y2)))\n",
+    "(prn (rest '((x1 x2) (y1 y2))))\n",
+    ";-> ((y1 y2))\n",
+    "\n",
+    "(list? (first '(a short list)))\n",
+    "(prn (list? (first '(a short list))))\n",
+    ";-> false\n",
+    "\n",
+    "(memq 'red '((red shoes) (blue socks)))\n",
+    "(prn (memq 'red '((red shoes) (blue socks))))\n",
+    ";-> false\n",
+    "\n",
+    "\n",
+    "(memq 'red '(red shoes blue socks))\n",
+    "(prn (memq 'red '(red shoes blue socks)))\n",
+    ";-> (red shoes blue socks)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "#'user/equal"
+      ]
+     },
+     "execution_count": 27,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "(defn equal [list1 list2]\n",
+    "\n",
+    "(cond\n",
+    "    (and (empty? list1) (empty? list2)) true\n",
+    "    (not= (first list1) (first list2)) false\n",
+    "    (= (first list1) (first list2)) (equal (rest list1) (rest list2))\n",
+    ")\n",
+    ")"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Clojure (clojupyter-v0.2.2)",
+   "language": "clojure",
+   "name": "clojupyter"
+  },
+  "language_info": {
+   "file_extension": ".clj",
+   "mimetype": "text/x-clojure",
+   "name": "clojure",
+   "version": "1.10.0"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
